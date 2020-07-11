@@ -3,17 +3,36 @@ from adafruit_circuitplayground import cp
 import supervisor
 import time
 import sys
+import random
 
 def non_blocking_read():
-    i = ""
-    while supervisor.runtime.serial_bytes_available:
-        i += sys.stdin.read(1)
-    return i
+    rgb_s = []
+    s = ""
+    while supervisor.runtime.serial_bytes_available and s != '\n':
+        s = sys.stdin.read(1)
+        rgb_s.append(s)
+    return ''.join(rgb_s).strip()
 
+def parse_inp(s):
+    return [tuple(int(p) for p in t.split(' ')) for t in s.split(',')]
+
+def light_up(rgb_out):
+    # TODO: Varying brightness
+    cp.pixels.brightness = 0.01
+    cp.pixels[:] = rgb_out
+
+def ran():
+    return random.randint(0,255)
+
+def random_rgb():
+    return ','.join([' '.join(str(ran()) for _ in range(3)) for _ in range(10)])
 
 while True:
-    time.sleep(1)
-    if cp.button_a:
-        res = non_blocking_read()
-        print("Button A pressed!")
-        print('result:', res)
+    # print('circuit-cinema')
+    #light_up(parse_inp((random_rgb())))
+    # time.sleep(0.5)
+    output = non_blocking_read()
+    if output:
+        print(repr(output), end='-------')
+        light_up(parse_inp((output)))
+    time.sleep(0.2)
