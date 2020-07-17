@@ -25,7 +25,11 @@ def ran():
     return random.randint(0,255)
 
 def random_rgb():
-    return ','.join([' '.join(str(ran()) for _ in range(3)) for _ in range(10)])
+    return ','.join([
+        ' '.join(str(ran())
+        for _ in range(3))
+        for x in range(10)
+    ])
 
 while True:
     # print('circuit-cinema')
@@ -35,4 +39,3 @@ while True:
     if output:
         print(repr(output), end='-------')
         light_up(parse_inp((output)))
-    time.sleep(0.2)

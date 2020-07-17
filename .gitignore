@@ -1,2 +1,3 @@
 circuit-cinema-venv/
 .vscode/
+__pycache__/
