@@ -1,1 +1,4 @@
 mss==6.0.0
+numpy==1.19.1
+hypothesis==5.20.0
+pyserial==3.4
