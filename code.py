@@ -15,6 +15,7 @@ def non_blocking_read():
 
 def parse_inp(s):
     return [tuple(int(p) for p in t.split(' ')) for t in s.split(',')]
+    
 
 def light_up(rgb_out):
     # TODO: Varying brightness

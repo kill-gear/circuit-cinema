@@ -2,9 +2,10 @@ import random
 import serial 
 import time
 from stream_screen import stream_avg_pixels
+from hypothesis import given, strategies as st
 
 
-SERIAL_PATH = '/dev/ttyACM3'
+SERIAL_PATH = '/dev/ttyACM0'
 BAUDRATE = 115200
 TIMEOUT = 0.01
 FPS = 100
@@ -16,6 +17,8 @@ def random_rgb():
             for _ in range(10)
         ]
     )
+
+
 
 def encode_rgb(frame):
 
@@ -39,5 +42,22 @@ def send_serial_rgb():
         # time.sleep(1/FPS)
 
 
+def parse_inp(s):
+    if not s:
+        return []
+    return [tuple(int(p) for p in t.split(' ')) for t in s.split(',')]
+
+
+rgb_val = st.integers(min_value=0, max_value=255)
+frames = st.lists(st.tuples(rgb_val, rgb_val, rgb_val), min_size=0)
+
+@given(frames)
+def test_encode_decode(frame):
+    encoded = encode_rgb(frame)
+    decoded = parse_inp(encoded)
+    assert decoded == frame 
+
+
 if __name__ == '__main__':
     send_serial_rgb()
+

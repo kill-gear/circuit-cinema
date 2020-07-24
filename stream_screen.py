@@ -1,8 +1,19 @@
 from functools import reduce
 from time import sleep
 from mss.linux import MSS as mss    
+import numpy as np
+
+
+def calc_avg_pixels_np(im, m=2, n=5):
+    np_pixels_arr = np.array(im.pixels)
+    height, width , _ = np_pixels_arr.shape
+    np_pixels_avg = np_pixels_arr.reshape(m * n, height // m, width // n, 3)
+    np_pixels_avg = np.mean(np_pixels_avg, axis=(1,2))
+    return np_pixels_avg.tolist()
+
 
 def calc_avg_pixels(im, m=1, n=10):
+    #TODO: Optimise calculation
     averages = []
     NUM_BLOCKS = 10
     height = im.size.height // NUM_BLOCKS
@@ -31,11 +42,12 @@ def stream_avg_pixels():
         bbox = (monitor['left'], monitor['top'], right, lower)
         while True:
 
+
             # Grab the picture
             #m.width / 10 Using PIL would be something like:
             im = sct.grab(bbox)  # type: ignore
             # return im
-            yield calc_avg_pixels(im)
+            yield calc_avg_pixels_np(im)
             
 # im = stream_avg_pixels()
 
